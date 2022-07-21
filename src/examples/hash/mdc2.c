@@ -115,7 +115,7 @@ ATTRIBUTE_WARN_UNUSED_RET int mdc2_update(mdc2_context *ctx, const u8 *input, u3
 	u8 left;
 	int ret;
 
-	MUST_HAVE((input != NULL), ret, err);
+	MUST_HAVE((input != NULL) || (ilen == 0), ret, err);
 	MDC2_HASH_CHECK_INITIALIZED(ctx, ret, err);
 
 	/* Nothing to process, return */
@@ -199,7 +199,7 @@ ATTRIBUTE_WARN_UNUSED_RET int mdc2_final(mdc2_context *ctx, u8 output[MDC2_DIGES
 	}
 
 	/* Output the hash result */
-	ret = local_memcpy(output, ctx->mdc2_state, MDC2_DIGEST_SIZE);
+	ret = local_memcpy(output, ctx->mdc2_state, MDC2_DIGEST_SIZE); EG(ret, err);
 
 	/* Tell that we are uninitialized */
 	ctx->magic = WORD(0);
